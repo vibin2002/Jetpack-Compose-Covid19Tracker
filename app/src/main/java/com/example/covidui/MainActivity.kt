@@ -1,5 +1,7 @@
 package com.example.covidui
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -12,14 +14,14 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageAsset
+import androidx.compose.ui.graphics.asImageAsset
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.imageResource
@@ -36,6 +38,9 @@ import com.example.covidui.newsapi.NewsApiHelper
 import com.example.covidui.newsapi.NewsRetrofitBuilder
 import com.example.covidui.newsapi.Newsfeed
 import com.example.covidui.ui.CovidUITheme
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -131,22 +136,57 @@ fun CovidHomeScrn(model: MainViewModel = viewModel()) {
 
 @Composable
 fun ScrollableRowComponent(news: Newsfeed?) {
+
+
     ScrollableRow(modifier = Modifier.fillMaxWidth(), children = {
         Row() {
             for (article in news?.articles!!) {
                 Card(
-                        shape = RoundedCornerShape(4.dp),
-                        modifier = Modifier.padding(16.dp),
+                    shape = RoundedCornerShape(4.dp),
+                    modifier = Modifier.padding(16.dp).height(200.dp).width(250.dp),
                 )
                 {
                     Column()
                     {
-//                        Image(modifier = Modifier.height(200.dp),
-//                                asset = imageResource(id = ),
-//                                contentScale = ContentScale.Inside
-//                        )
+                        var image by remember { mutableStateOf<ImageAsset?>(null) }
+                        var drawable by remember { mutableStateOf<Drawable?>(null) }
+
+                        onCommit("IMAGE")
+                        {
+                            val picasso = Picasso.get()
+
+                            val target = object : Target {
+                                override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                                    image = bitmap?.asImageAsset()
+                                }
+
+                                override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+                                    drawable = errorDrawable
+                                }
+
+                                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                                    drawable = placeHolderDrawable
+                                }
+                            }
+
+                            picasso.load(article.urlToImage).into(target)
+                            onDispose {
+                                image = null
+                                drawable = null
+                                picasso.cancelRequest(target)
+                            }
+                        }
+                        if (image == null)
+                            CircularProgressIndicator()
+                        else
+                            Image(
+                                modifier = Modifier.weight(8f),
+                                asset = image!!,
+                                contentScale = ContentScale.Crop
+                        )
                         Text(
-                                text = article.title, modifier = Modifier.padding(4.dp),
+                            text = article.title, modifier = Modifier.padding(4.dp).weight(2f),
+                            fontSize = TextUnit.Companion.Sp(12)
                         )
 
                     }
