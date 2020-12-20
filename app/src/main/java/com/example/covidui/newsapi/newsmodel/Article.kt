@@ -1,4 +1,4 @@
-package com.example.covidui.newsapi
+package com.example.covidui.newsapi.newsmodel
 
 data class Article(
     val author: String,

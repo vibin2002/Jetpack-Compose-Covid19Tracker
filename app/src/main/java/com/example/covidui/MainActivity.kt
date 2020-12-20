@@ -34,9 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.ui.tooling.preview.Preview
-import com.example.covidui.newsapi.NewsApiHelper
-import com.example.covidui.newsapi.NewsRetrofitBuilder
-import com.example.covidui.newsapi.Newsfeed
+import com.example.covidui.newsapi.ApiHelper
+import com.example.covidui.newsapi.Apiservice
+import com.example.covidui.newsapi.RetrofitBuilder
+import com.example.covidui.newsapi.newsmodel.Newsfeed
 import com.example.covidui.ui.CovidUITheme
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -58,9 +59,9 @@ class MainActivity : AppCompatActivity() {
         }
         setupViewModel()
     }
-
+//MainViewModelFactory(ApiHelper(RetrofitBuilder.newsapiservice))
     private fun setupViewModel() {
-        viewModel = ViewModelProvider(this,MainViewModelFactory(NewsApiHelper(NewsRetrofitBuilder.apiService)))
+        viewModel = ViewModelProvider(this,MainViewModelFactory(Repository()))
             .get(MainViewModel::class.java)
     }
 }
@@ -70,7 +71,9 @@ class MainActivity : AppCompatActivity() {
 fun CovidHomeScrn(model: MainViewModel = viewModel()) {
 
     val news by model.getNewsData().observeAsState()
-    Log.e("ViewModel" , news.toString())
+    val corona by model.getCoronaData().observeAsState()
+
+    Log.e("ViewModel" , corona.toString())
 
     ScrollableColumn(modifier = Modifier.fillMaxHeight()) {
         Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
@@ -99,27 +102,34 @@ fun CovidHomeScrn(model: MainViewModel = viewModel()) {
                 Text(text = "WorldWide")
             }
         }
-
-        HomeCard(title = "Confirmed",
-                count = "100000",
+        if (corona == null)
+            CircularProgressIndicator()
+        else {
+            HomeCard(
+                title = "Confirmed",
+                count = corona!!.cases.toString(),
                 cardbg = Color(0xFFffa48e),
                 emojidrawable = imageResource(id = R.drawable.confirmed_emoji)
-        )
-        HomeCard(title = "Active",
-                count = "100000",
+            )
+            HomeCard(
+                title = "Active",
+                count = corona!!.active.toString(),
                 cardbg = Color(0xFF4acfac),
                 emojidrawable = imageResource(id = R.drawable.active_emoji)
-        )
-        HomeCard(title = "Recovered",
-                count = "100000",
+            )
+            HomeCard(
+                title = "Recovered",
+                count = corona!!.recovered.toString(),
                 cardbg = Color(0xFF5ddbe8),
                 emojidrawable = imageResource(id = R.drawable.happy_emoji)
-        )
-        HomeCard(title = "Deaths",
-                count = "100000",
+            )
+            HomeCard(
+                title = "Deaths",
+                count = corona!!.deaths.toString(),
                 cardbg = Color(0xFF7e8ce0),
                 emojidrawable = imageResource(id = R.drawable.death_emoji)
-        )
+            )
+        }
         Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
         Text(
                 text = "Latest updates",

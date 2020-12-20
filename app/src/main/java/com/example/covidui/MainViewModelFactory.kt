@@ -2,16 +2,12 @@ package com.example.covidui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.covidui.newsapi.NewsApiHelper
-import com.example.covidui.newsapi.Repository
+import com.example.covidui.newsapi.ApiHelper
 
-class MainViewModelFactory(private val newsApiHelper: NewsApiHelper)  : ViewModelProvider.Factory {
+class MainViewModelFactory(val repository: Repository)  : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(Repository(newsApiHelper)) as T
-        }
-        throw IllegalArgumentException("Unknown class name")
-    }
+        return MainViewModel(repository = repository) as T
 
+    }
 }
