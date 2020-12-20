@@ -1,4 +1,4 @@
-package com.example.covidui.newsapi
+package com.example.covidui.apis
 
 class ApiHelper(private val apiservice1: Apiservice,private val apiservice2: Apiservice) {
 

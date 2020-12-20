@@ -10,15 +10,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawShadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageAsset
 import androidx.compose.ui.graphics.asImageAsset
@@ -34,14 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.viewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.ui.tooling.preview.Preview
-import com.example.covidui.newsapi.ApiHelper
-import com.example.covidui.newsapi.Apiservice
-import com.example.covidui.newsapi.RetrofitBuilder
-import com.example.covidui.newsapi.newsmodel.Newsfeed
+import com.example.covidui.apis.newsmodel.Newsfeed
+import com.example.covidui.repository.Repository
 import com.example.covidui.ui.CovidUITheme
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,15 +46,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CovidUITheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = Color(0xFF404369)) {
+                // A surface container using the 'background' color from the theme Color(0xFF404369)
+                Surface(color = MaterialTheme.colors.background) {
                     CovidHomeScrn()
                 }
             }
         }
         setupViewModel()
     }
-//MainViewModelFactory(ApiHelper(RetrofitBuilder.newsapiservice))
+
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this,MainViewModelFactory(Repository()))
             .get(MainViewModel::class.java)
@@ -140,12 +135,12 @@ fun CovidHomeScrn(model: MainViewModel = viewModel()) {
                 ),
                 modifier = Modifier.padding(start = 24.dp)
         )
-        if (news == null) CircularProgressIndicator() else ScrollableRowComponent(news = news)
+        if (news == null) CircularProgressIndicator() else ScrollableNewsRow(news = news)
     }
 }
 
 @Composable
-fun ScrollableRowComponent(news: Newsfeed?) {
+fun ScrollableNewsRow(news: Newsfeed?) {
 
 
     ScrollableRow(modifier = Modifier.fillMaxWidth(), children = {
@@ -159,7 +154,7 @@ fun ScrollableRowComponent(news: Newsfeed?) {
                     Column()
                     {
                         var image by remember { mutableStateOf<ImageAsset?>(null) }
-                        var drawable by remember { mutableStateOf<Drawable?>(null) }
+//                        var drawable by remember { mutableStateOf<Drawable?>(null) }
 
                         onCommit("IMAGE")
                         {
@@ -171,18 +166,18 @@ fun ScrollableRowComponent(news: Newsfeed?) {
                                 }
 
                                 override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                                    drawable = errorDrawable
+//                                    drawable = errorDrawable
                                 }
 
                                 override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                                    drawable = placeHolderDrawable
+//                                    drawable = placeHolderDrawable
                                 }
                             }
 
                             picasso.load(article.urlToImage).into(target)
                             onDispose {
                                 image = null
-                                drawable = null
+//                                drawable = null
                                 picasso.cancelRequest(target)
                             }
                         }
@@ -214,7 +209,7 @@ fun HomeCard(
         emojidrawable: ImageAsset
 ) {
     Card(
-            modifier = Modifier.fillMaxWidth().padding(12.dp), backgroundColor = cardbg,
+            modifier = Modifier.fillMaxWidth().padding(12.dp).drawShadow(12.dp), backgroundColor = cardbg,
             elevation = 5.dp,
             shape = RoundedCornerShape(corner = CornerSize(12.dp))
     ) {

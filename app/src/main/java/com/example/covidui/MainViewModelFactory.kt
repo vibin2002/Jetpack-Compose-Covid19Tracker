@@ -2,7 +2,7 @@ package com.example.covidui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.covidui.newsapi.ApiHelper
+import com.example.covidui.repository.Repository
 
 class MainViewModelFactory(val repository: Repository)  : ViewModelProvider.Factory {
 

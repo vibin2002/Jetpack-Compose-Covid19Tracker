@@ -1,6 +1,4 @@
-package com.example.covidui.newsapi.newsmodel
-
-import com.example.covidui.newsapi.newsmodel.Article
+package com.example.covidui.apis.newsmodel
 
 data class Newsfeed(
     val articles: List<Article>,

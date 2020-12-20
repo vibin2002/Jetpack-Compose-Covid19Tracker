@@ -1,4 +1,4 @@
-package com.example.covidui.statsapi
+package com.example.covidui.apis.statsmodel
 
 data class Corona(
     val active: Int,

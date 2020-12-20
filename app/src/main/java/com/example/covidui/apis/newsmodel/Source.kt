@@ -1,4 +1,4 @@
-package com.example.covidui.newsapi.newsmodel
+package com.example.covidui.apis.newsmodel
 
 data class Source(
     val id: Any,

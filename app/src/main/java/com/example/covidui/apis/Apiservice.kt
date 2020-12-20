@@ -1,7 +1,7 @@
-package com.example.covidui.newsapi
+package com.example.covidui.apis
 
-import com.example.covidui.newsapi.newsmodel.Newsfeed
-import com.example.covidui.statsapi.Corona
+import com.example.covidui.apis.newsmodel.Newsfeed
+import com.example.covidui.apis.statsmodel.Corona
 import retrofit2.http.GET
 
 interface Apiservice {

@@ -2,10 +2,8 @@ package com.example.covidui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import kotlinx.coroutines.CoroutineScope
+import com.example.covidui.repository.Repository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: Repository) : ViewModel(){
 

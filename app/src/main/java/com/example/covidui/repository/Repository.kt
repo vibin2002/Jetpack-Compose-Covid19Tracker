@@ -1,7 +1,6 @@
-package com.example.covidui
+package com.example.covidui.repository
 
-import com.example.covidui.newsapi.ApiHelper
-import com.example.covidui.newsapi.RetrofitBuilder
+import com.example.covidui.apis.RetrofitBuilder
 
 class Repository()
 {
