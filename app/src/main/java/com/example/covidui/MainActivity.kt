@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun CovidHomeScrn(model: MainViewModel = viewModel()) {
 
-    val news by model.getNewsData().observeAsState()
-    val corona by model.getCoronaData().observeAsState()
+    val news by model.newsvm.observeAsState()
+    val corona by model.coronavm.observeAsState()
 
     Log.e("ViewModel" , corona.toString())
 
@@ -98,7 +98,7 @@ fun CovidHomeScrn(model: MainViewModel = viewModel()) {
             }
         }
         if (corona == null)
-            CircularProgressIndicator()
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
         else {
             HomeCard(
                 title = "Confirmed",
@@ -135,7 +135,7 @@ fun CovidHomeScrn(model: MainViewModel = viewModel()) {
                 ),
                 modifier = Modifier.padding(start = 24.dp)
         )
-        if (news == null) CircularProgressIndicator() else ScrollableNewsRow(news = news)
+        if (news == null) CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally)) else ScrollableNewsRow(news = news)
     }
 }
 

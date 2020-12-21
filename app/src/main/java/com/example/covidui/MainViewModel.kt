@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 
 class MainViewModel(private val repository: Repository) : ViewModel(){
 
-    fun getNewsData() = liveData(Dispatchers.IO) {
+    var newsvm = liveData(Dispatchers.IO) {
         try {
             emit(repository.getNewsApi())
         }
@@ -17,7 +17,7 @@ class MainViewModel(private val repository: Repository) : ViewModel(){
         }
     }
 
-    fun getCoronaData() = liveData(Dispatchers.IO) {
+    var coronavm = liveData(Dispatchers.IO) {
         try {
             emit(repository.getCoronaApi())
         }
